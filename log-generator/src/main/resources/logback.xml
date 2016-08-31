@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %level %logger - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="file" class="ch.qos.logback.core.FileAppender">
+    <file>app.log</file>
+    <append>true</append>
+    <encoder>
+      <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %level %logger - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+
+  <appender name="syslog" class="ch.qos.logback.classic.net.SyslogAppender">
+    <syslogHost>192.168.1.1</syslogHost>
+    <port>514</port>
+    <facility>user</facility>
+    <suffixPattern>%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %level %logger - %msg%n</suffixPattern>
+  </appender>
+
+  <appender name="async" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="file" />
+  </appender>
+
+  <root level="debug">
+    <appender-ref ref="stdout"/>
+    <appender-ref ref="async" />
+    <!-- <appender-ref ref="syslog"/> -->
+  </root>
+
+</configuration>

@@ -1,0 +1,274 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+	                         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Maven Metadatas -->
+    <groupId>com.github.vspiewak</groupId>
+    <artifactId>log-generator</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <!-- Project Metadatas -->
+    <name>log-generator</name>
+    <description>
+        A simple log generator
+    </description>
+    <url>http://github.com/vspiewak/log-generator</url>
+
+    <inceptionYear>2013</inceptionYear>
+
+    <organization>
+        <name>Vincent Spiewak</name>
+        <url>http://www.github.com/vspiewak</url>
+    </organization>
+
+    <!-- Project Properties -->
+    <properties>
+
+        <java.main.class>com.github.vspiewak.loggenerator.App</java.main.class>
+
+        <!-- UTF-8 Encoding for all -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Dependencies versions -->
+        <slf4j.version>1.7.5</slf4j.version>
+        <slf4j.log4j.version>1.7.5</slf4j.log4j.version>
+        <logback.version>1.0.13</logback.version>
+        <log4j.version>1.2.17</log4j.version>
+        <jcommander.version>1.30</jcommander.version>
+        <junit.version>4.10</junit.version>
+
+        <java.version>1.6</java.version>
+        <maven.shade.plugin>2.1</maven.shade.plugin>
+        <maven.jar.plugin>2.4</maven.jar.plugin>
+
+    </properties>
+
+    <!-- Team Metadatas -->
+    <developers>
+
+        <!-- A Developer - You can skip some fields... -->
+        <developer>
+            <id>vspiewak</id>
+            <name>Vincent Spiewak</name>
+            <email>vspiewak+github@gmail.com</email>
+            <roles>
+                <role>Admin</role>
+                <role>Developer</role>
+            </roles>
+            <organization>http://github.com/vspiewak</organization>
+        </developer>
+
+    </developers>
+
+    <profiles>
+
+        <profile>
+            <id>logback</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                    <version>${logback.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-core</artifactId>
+                    <version>${logback.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>log4j</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <version>${slf4j.log4j.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                    <version>${log4j.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+
+    </profiles>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>${jcommander.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+
+        </dependency>
+
+    </dependencies>
+
+
+    <build>
+
+        <!-- Build plugins -->
+        <plugins>
+
+            <!-- Maven Compiler -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+
+                    <!-- Ensures we are compiling at java.version level -->
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+
+                    <!-- Show Warnings & Deprecations -->
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+
+                </configuration>
+            </plugin>
+
+            <!-- Maven Jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven.jar.plugin}</version>
+                <configuration>
+                    <archive>
+                        <!-- Add manifest Main-Class entry -->
+                        <manifest>
+                            <mainClass>${java.main.class}</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!-- Maven Shade -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${maven.shade.plugin}</version>
+                <configuration>
+                    <minimizeJar>false</minimizeJar>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Maven Enforcer -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>enforce</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+
+                            <!-- Fail the build if a check fail -->
+                            <fail>true</fail>
+
+                            <!-- Stop on the first check fail -->
+                            <failFast>true</failFast>
+
+                            <!-- Rules: -->
+                            <rules>
+
+                                <!-- Check Java version -->
+                                <requireJavaVersion>
+                                    <version>${java.version}</version>
+                                </requireJavaVersion>
+
+                                <!-- No snapshots Dependencies -->
+                                <requireReleaseDeps>
+                                    <message>snapshots dependency found</message>
+                                </requireReleaseDeps>
+
+                                <!-- Only one version per dependency -->
+                                <dependencyConvergence/>
+
+                                <!-- No Repositories in pom.xml -->
+                                <requireNoRepositories>
+                                    <message><![CDATA[<repositories>...</repositories> defined in pom.xml]]></message>
+                                </requireNoRepositories>
+
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+
+        <!-- m2e (Maven integration for Eclipse) requires the following configuration -->
+        <!-- this avoid m2e warning about enforce goal -->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-enforcer-plugin</artifactId>
+                                        <versionRange>[1.0.0,)</versionRange>
+                                        <goals>
+                                            <goal>enforce</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore/>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+    </build>
+
+</project>

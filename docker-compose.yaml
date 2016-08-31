@@ -1,0 +1,54 @@
+version: '2'
+services:
+    generator:
+        image: vincentdesmet/log-generator:latest
+        command: java -jar target/log-generator-0.0.1-SNAPSHOT.jar -n 1 -r 100 -t 1
+        depends_on:
+            - fluentd
+        logging:
+            driver: "fluentd"
+            options:
+                fluentd-address: "localhost:24224"
+                tag: "docker.generator.{{.ID}}"
+        networks: 
+            - back-tier
+    
+    fluentd:
+        image: vincentdesmet/fluentd:latest
+        volumes:
+            - ./fluentd/fluent.conf:/fluentd/etc/fluent.conf
+        depends_on:
+            - es
+        environment:
+            - ES_HOST=es
+            - ES_PORT=9200
+        ports:
+          - "24224:24224"
+        networks: 
+            - back-tier
+    
+    es:
+        image: elasticsearch:2.3.5
+        networks:
+            - back-tier
+        volumes:
+            - esdata:/usr/share/elasticsearch/data
+
+    kibana:
+        image: vincentdesmet/kibana-sense:4.5.4
+        depends_on:
+            - es
+        networks:
+            - back-tier
+            - front-tier
+        environment:
+            - ELASTICSEARCH_URL=http://es:9200
+        ports:
+            - "80:5601"
+
+volumes:
+    esdata:
+
+networks:
+    back-tier:
+    front-tier:

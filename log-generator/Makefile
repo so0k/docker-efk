@@ -26,10 +26,10 @@ docker-build:
 	docker tag ${IMAGE} ${MUTABLE_IMAGE}
 
 docker-logs:
-	docker logs -f `docker ps -lqf ancestor=${IMAGE}`
+	docker logs -f `docker ps -lqf ancestor=${MUTABLE_IMAGE}`
 	
 docker-run: 
-	docker run -d --name ${DIR_NAME} ${IMAGE}
+	docker run -d --name ${DIR_NAME} ${MUTABLE_IMAGE}
 	@#echo "Exposed Ports:"
 	@#docker inspect --format='{{range $$p, $$conf := .NetworkSettings.Ports}} {{$$p}} -> {{(index $$conf 0).HostPort}} {{end}}' `docker ps -lq -n1`
 

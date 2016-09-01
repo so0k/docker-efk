@@ -9,17 +9,17 @@ build: docker-build
 up: docker-up
 down: docker-down
 push: docker-push
-attach: docker-exec
+logs: docker-logs
 
 docker-build: 
 	docker build --rm=true --tag=${IMAGE} -f Dockerfile .
 	docker tag ${IMAGE} ${MUTABLE_IMAGE}
 
 docker-up:
-	docker-compose -p awsdbr -f docker-compose.yaml up -d
+	docker-compose -p ${SHORT_NAME} -f docker-compose.yaml up -d
 
 docker-down:
-	docker-compose -p awsdbr -f docker-compose.yaml down
+	docker-compose -p ${SHORT_NAME} -f docker-compose.yaml down
 
-docker-exec:
-	docker exec -it awsdbr_parser_1 /bin/bash
+docker-logs:
+	docker-compose -p ${SHORT_NAME} logs -f

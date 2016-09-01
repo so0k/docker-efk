@@ -1,0 +1,27 @@
+version: '2'
+services:
+    es:
+        image: elasticsearch:2.3.5
+        networks:
+            - back-tier
+        volumes:
+            - esdata:/usr/share/elasticsearch/data
+
+    kibana:
+        image: vincentdesmet/kibana-sense:4.5.4
+        depends_on:
+            - es
+        networks:
+            - back-tier
+            - front-tier
+        environment:
+            - ELASTICSEARCH_URL=http://es:9200
+        ports:
+            - "80:5601"
+
+volumes:
+    esdata:
+
+networks:
+    back-tier:
+    front-tier:

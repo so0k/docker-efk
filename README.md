@@ -36,7 +36,7 @@ section below on how to deploy the Fluentd agents to each node using DaemonSets 
 Additionally, as part of the logging add-on, a 2 node Elasticsearch cluster for indexing is deployed and exposed as an internal cluster service. It is important to note that this Elasticsearch
 cluster does not follow the best practices of running Master, Client and Data Elasticsearch nodes recommended for performance and resiliency. 
 Configuration and Manifest files to run a production ready ES cluster, with integrated Kubernetes [cloud discovery](https://github.com/fabric8io/elasticsearch-cloud-kubernetes) for the latest 
-Elasticsearch version [are available](https://github.com/pires/kubernetes-elasticsearch-cluster) and should be considered as well.
+Elasticsearch version [are available](https://github.com/pires/kubernetes-elasticsearch-cluster) and should be considered instead.
 
 Nevertheless, the Fluentd+Elasticsearch & Kibana (EFK) stack provides very powerful analysis, as will be demonstrated using the setup in this repository.
 
@@ -44,8 +44,8 @@ Nevertheless, the Fluentd+Elasticsearch & Kibana (EFK) stack provides very power
 
 To play with the full EFK stack locally, this repository currently leverages Docker Compose and Docker For Mac. 
 
-A sample [log generato](https://github.com/vspiewak/log-generator) is used to simulate activity on a commercial website.
-The stack defined in Docker Compose will stand up inter-connected Elasticsearch, Kibana, Fluentd and Log-Generator containers. 
+A sample [log generator](https://github.com/vspiewak/log-generator) is used to simulate activity on an e-commerce website.
+The stack defined in Docker Compose will stand up inter-connected Elasticsearch, Kibana, Fluentd and Log-generator containers. 
 
 The Fluentd configuration is mounted from the current working directory, allowing you to experiment with its settings to parse the provided sample logs.
 
@@ -56,30 +56,30 @@ Contents of this repository:
 .
 ├── Makefile                            Main Makefile to run demoscript
 ├── README.md                           This Readme
-├── docker-compose.yaml                 Definition of Stack
-├── fluentd                             fluentd container setup
-│   ├── Dockerfile                      fluentd image recipe
+├── docker-compose.yaml                 Definition of full stack
+├── fluentd                             >> Fluentd container setup
+│   ├── Dockerfile                      Fluentd image recipe
 │   ├── Makefile                        Build script for fluentd image
-│   ├── elasticsearch-template.json     index template 
-│   ├── fluent.conf                     fluend configuration
-│   ├── fluentd.vim                     simple syntax highlighting
-│   ├── plugins/                        placeholder for custom ruby parse scripts
-│   └── versioning.mk                   versioning Makefile
-├── kibana-sense                        Kibana container setup
+│   ├── elasticsearch-template.json     Index template 
+│   ├── fluent.conf                     Fluentd configuration
+│   ├── fluentd.vim                     Simple syntax highlighting
+│   ├── plugins/                        Placeholder for custom ruby parse scripts
+│   └── versioning.mk                   Versioning Makefile
+├── kibana-sense                        >> Kibana container setup
 │   ├── Dockerfile                      Kibana image with Sense plugin
 │   ├── Makefile                        Build script for Kibana image
 │   └── versioning.mk                   versioning Makefile
-├── log-generator                       Sample Log generator
+├── log-generator                       >> Sample Log generator
 │   ├── Dockerfile                      OpenJDK based image recipe
 │   ├── Makefile                        Build script for Log generator
-│   ├── README.md                       original readme from log generator
+│   ├── README.md                       Original readme from log generator
 │   ├── pom.xml                         Maven package
 │   ├── src/                            Source for Log Generator
-│   └── versioning.mk                   versioning Makefile
-└── versioning.mk                       main versioning Makefile
+│   └── versioning.mk                   Versioning Makefile
+└── versioning.mk                       Main versioning Makefile
 ```
 
-### Log generator
+### Log generator (./log-generator/)
 
 Go to log-generator sub folder
 
@@ -109,7 +109,7 @@ Stop & Remove the container
 make stop
 ```
 
-### Kibana Image
+### Kibana Image (./kibana-sense)
 
 Building the image:
 
@@ -119,14 +119,14 @@ make build
 
 This is based on the official Kibana image, but with the Sense plug-in made available. 
 
-### Fluentd Image
+### Fluentd Image (./fluentd)
 
 Building the image:
 ```
 make build
 ```
 
-### Full Stack
+### Full Stack (Repository Root)
 
 From the root directory:
 
